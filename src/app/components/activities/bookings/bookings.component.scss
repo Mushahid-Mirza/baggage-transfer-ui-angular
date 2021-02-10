@@ -1,0 +1,30 @@
+.parcel-bg {
+  background-image: url('https://img.icons8.com/cotton/2x/big-parcel.png');
+  background-size: cover;
+}
+
+.scooter-bg {
+  background-image: url('https://www.iconpacks.net/icons/2/free-scooter-icon-1765-thumb.png');
+  background-size: cover;
+}
+
+.tab-container {
+  height: calc(100vh - 186px);
+  overflow: auto;
+  padding: 8px;
+}
+
+
+.remove-margin {
+  margin-top: -10px;
+  padding-bottom: 0 !important;
+}
+
+.active-booking-card {
+  background-color: rgb(178, 226, 188);
+}
+
+
+.active-travels-card {
+  background-color: rgb(178, 226, 188);
+}

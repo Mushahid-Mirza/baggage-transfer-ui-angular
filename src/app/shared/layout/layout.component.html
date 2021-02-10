@@ -1,0 +1,4 @@
+<div class="spinner-container" *ngIf="show && isLoading">
+    <load-spinner></load-spinner>
+</div>
+<ng-content *ngIf="show && !isLoading"></ng-content>

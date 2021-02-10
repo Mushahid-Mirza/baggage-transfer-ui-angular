@@ -1,0 +1,81 @@
+<activity>
+
+    <sidenav-common [hasNav]='false' [title]="app_name"></sidenav-common>
+  
+    <layout [isLoading]="loading">
+      <div style="padding:50px 20px">
+        <br />
+        <h3 class="heading">Sign Up</h3>
+        <br />
+        <br />
+        <form [formGroup]="signupForm" class="signup-form text-center" (ngSubmit)="SignUp()" autocomplete="off">
+  
+          <mat-form-field class="signup-width" color="accent">
+            <span matPrefix>
+              <mat-icon [inline]="true">person</mat-icon>
+              &nbsp;
+            </span>
+            <input formControlName="email" autocomplete="off" [class.d-invalid]="email().invalid && email().touched && password().value.length > 0"
+              type="tel" matInput placeholder="Email">
+            <mat-error
+              *ngIf="email().invalid && email().touched && email().value.length > 0"
+              [class.text-danger]="true">
+              Please enter valid mobile number
+            </mat-error>
+          </mat-form-field>
+          <br /> <br /> 
+          <mat-form-field class="signup-width" color="accent">
+            <span matPrefix>
+              <mat-icon [inline]="true">lock</mat-icon>
+              &nbsp;
+            </span>
+            <input formControlName="Password" pattern="[0-9]{6}" autocomplete="off"
+                        [class.d-invalid]="password().invalid && password().touched && password().value.length > 0" type="password" matInput
+              maxlength="6"
+              placeholder="password">
+            <mat-error *ngIf="password().invalid && password().touched && password().value.length > 0">
+              Please enter the valid Password
+            </mat-error>
+          </mat-form-field>
+          <br/>
+          <br/>
+          <mat-form-field class="signup-width" color="accent">
+            <span matPrefix>
+              <mat-icon [inline]="true">lock</mat-icon>
+              &nbsp;
+            </span>
+            <input formControlName="Confirm" autocomplete="off"
+                        [class.d-invalid]="password().invalid && password().touched && password().value.length > 0" type="password" matInput
+              maxlength="6"
+              placeholder="Confirm password">
+            <mat-error *ngIf="password().invalid && password().touched && password().value.length > 0">
+              Please enter the valid password
+            </mat-error>
+          </mat-form-field>
+          <input type="hidden" formControlName="rememberMe" value="true"/>
+          <br /> 
+          <!-- <mat-checkbox formControlName="rememberMe">Remember Me</mat-checkbox> -->
+  
+          <div class="text-center text-danger" *ngIf="isInvalidAttempt">
+            <small> Please enter valid credentials</small>
+          </div>
+  
+          <mat-grid-list cols="4" rowHeight="100px" [gutterSize]="'9px'">
+            <mat-grid-tile></mat-grid-tile>
+            <mat-grid-tile>
+              <button type="button" mat-flat-button class="full-width mat-flat-button"
+                (click)="LogIn()" color="primary">Login</button>
+            </mat-grid-tile>
+            <mat-grid-tile>
+              <!--<input type="submit" style="opacity:0; height:1px; width:1px;display:inline-block"/>-->
+              <button type="button" mat-flat-button class="full-width mat-flat-button"
+                (click)="SignUp()" color="accent">Sign Up</button>
+            </mat-grid-tile>
+            <mat-grid-tile></mat-grid-tile>
+          </mat-grid-list>
+          
+        </form>
+  
+      </div>
+    </layout>
+  </activity>

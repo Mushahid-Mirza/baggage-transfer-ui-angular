@@ -1,0 +1,31 @@
+<activity>
+  <sidenav-common [title]="title" [searchText]="'Select Destination'" [isBack]="true">
+  </sidenav-common>
+
+  <layout>
+
+
+    <ng-container *ngIf="aadharInfo != null">
+
+      <br /><br />
+      <h2 style="text-align: center">Aadhar</h2>
+
+      <br />
+
+      <div style="width: calc(100% - 20px); margin-top: 20px; height:auto; padding : 10px;">
+        <img style="width: 100%"
+          [attr.src]="'https://upload.wikimedia.org/wikipedia/commons/3/3f/A_sample_of_Aadhaar_card.jpg'" />
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="aadharInfo == null">
+
+      <div style="text-align:center; margin-top: 150px;">
+        <button type="button" mat-flat-button class="mat-flat-button" (click)="uploadAadhar()" color="accent">Upload
+          Aadhar</button>
+      </div>
+
+    </ng-container>
+
+  </layout>
+</activity>

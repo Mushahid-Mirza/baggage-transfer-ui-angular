@@ -1,0 +1,65 @@
+<activity>
+
+  <sidenav-common [hasNav]='false' [title]="app_name"></sidenav-common>
+
+  <layout [isLoading]="loading">
+    <div style="padding:50px 20px">
+      <br />
+      <h3 class="heading">Login</h3>
+      <br />
+      <br />
+      <form [formGroup]="loginForm" class="login-form text-center" (ngSubmit)="LogIn()" autocomplete="off">
+
+        <mat-form-field class="login-width" color="accent">
+          <span matPrefix>
+            <mat-icon [inline]="true">person</mat-icon>
+            &nbsp;
+          </span>
+          <input formControlName="email" autocomplete="off"
+            [class.d-invalid]="submitted && email().invalid && email().touched && password().value.length > 0" type="tel"
+            matInput placeholder="Email">
+          <mat-error *ngIf="submitted && email().invalid && email().touched && email().value.length > 0"
+            [class.text-danger]="true">
+            Please enter valid email
+          </mat-error>
+        </mat-form-field>
+        <br /> <br />
+        <mat-form-field class="login-width" color="accent">
+          <span matPrefix>
+            <mat-icon [inline]="true">lock</mat-icon>
+            &nbsp;
+          </span>
+          <input formControlName="password" autocomplete="off"
+            [class.d-invalid]="submitted && password().invalid && password().touched && password().value.length > 0" type="password"
+            matInput maxlength="20" placeholder="password">
+          <mat-error *ngIf="submitted && password().invalid && password().touched && password().value.length > 0">
+            Please enter the valid password
+          </mat-error>
+        </mat-form-field>
+        <input type="hidden" formControlName="rememberMe" value="true" />
+        <br />
+        <!-- <mat-checkbox formControlName="rememberMe">Remember Me</mat-checkbox> -->
+
+        <div class="text-center text-danger" *ngIf="isInvalidAttempt">
+          <small> Please enter valid credentials</small>
+        </div>
+
+        <mat-grid-list cols="4" rowHeight="100px" [gutterSize]="'9px'">
+          <mat-grid-tile></mat-grid-tile>
+          <mat-grid-tile>
+            <button type="button" mat-flat-button class="full-width mat-flat-button"
+              (click)="Register()" color="primary">Sign Up</button>
+          </mat-grid-tile>
+          <mat-grid-tile>
+            <!--<input type="submit" style="opacity:0; height:1px; width:1px;display:inline-block"/>-->
+            <button type="button" mat-flat-button class="full-width mat-flat-button"
+              (click)="LogIn()" color="accent">Login</button>
+          </mat-grid-tile>
+          <mat-grid-tile></mat-grid-tile>
+        </mat-grid-list>
+
+      </form>
+
+    </div>
+  </layout>
+</activity>

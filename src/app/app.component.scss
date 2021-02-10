@@ -1,0 +1,21 @@
+ngx-bottom-nav {
+  position: absolute !important;
+  bottom: 0;
+  width: 100%;
+}
+
+.displayBlock {
+  display: block;
+}
+
+.displayNone {
+  display: none;
+}
+
+.root-div {
+    position: relative;
+    max-width: 350px !important;
+    margin: 0 auto;
+    border: 1px solid grey;
+    border-radius: 2px;
+}

@@ -1,0 +1,45 @@
+<activity>
+
+  <sidenav-common [title]="title" [isBack]="false"></sidenav-common>
+
+  <layout>
+
+    
+
+    <mat-list role="list">
+
+
+      <div mat-subheader><small>My Info</small></div>
+ 
+      <mat-list-item matRipple matRipple role="listitem" [routerLink]="['/', 'profiles']"> 
+        Profile
+      </mat-list-item>
+
+      <mat-list-item matRipple role="listitem" [routerLink]="['/', 'my-adhaar']">
+        My Adhaar
+      </mat-list-item>
+      
+      <mat-divider></mat-divider>
+ 
+      <div mat-subheader><small>Security</small></div>
+ 
+      <mat-list-item matRipple matRipple role="listitem">
+        Change Password
+      </mat-list-item>
+
+      <br />
+
+    </mat-list>
+
+    
+    <br />
+
+    <div style="text-align:center">
+      <button type="button" mat-flat-button class="mat-flat-button" (click)="Logout()" color="accent">Logout</button>
+    </div>
+
+
+
+  </layout>
+
+</activity>

@@ -1,0 +1,124 @@
+<activity>
+
+  <sidenav-common [title]="title" [isBack]="false"></sidenav-common>
+
+  <layout style="height: calc(100% - 210px);" class="remove-margin">
+
+    <mat-tab-group mat-stretch-tabs>
+
+      <mat-tab label="My Bookings">
+
+        <div class="tab-container">
+
+          <h3>Active </h3>
+
+          <ng-container *ngFor="let item of activeBookings">
+
+            <mat-card class="active-booking-card">
+              <mat-card-header>
+                <div mat-card-avatar class="parcel-bg"></div>
+                <mat-card-title> {{ item.name }} </mat-card-title>
+                <mat-card-subtitle> {{ item.price | currency: "INR"  }} - Currently Active</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <p>
+                  In next 2 hours and 20 minutes
+                </p>
+              </mat-card-content>
+              <mat-card-actions style="text-align:right">
+                <button mat-raised-button color="warn">CANCEL</button>
+              </mat-card-actions>
+            </mat-card>
+            <br />
+
+          </ng-container>
+          <mat-divider *ngIf="activeBookings?.length > 0 && previousBookings?.length > 0"></mat-divider>
+          <br />
+          <h3>Previous </h3>
+
+          <ng-container *ngFor="let item of previousBookings">
+
+            <mat-card class="previous-booking-card">
+              <mat-card-header>
+                <div mat-card-avatar class="parcel-bg"></div>
+                <mat-card-title> {{ item.name }}</mat-card-title>
+                <mat-card-subtitle>{{ item.price | currency: "INR"  }} - Closed</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <p>
+                  In next 2 hours
+                </p>
+              </mat-card-content>
+              <mat-card-actions style="text-align:right">
+                <button mat-raised-button color="warn">CANCEL</button>
+              </mat-card-actions>
+            </mat-card>
+            <br />
+
+          </ng-container>
+
+        </div>
+
+      </mat-tab>
+      <mat-tab label="My Travels">
+
+        <div class="tab-container">
+
+          <h3>Active </h3>
+
+          <ng-container *ngFor="let item of activeTravels">
+
+            <mat-card class="active-travels-card">
+              <mat-card-header>
+                <div mat-card-avatar class="scooter-bg"></div>
+                <mat-card-title>Shiba Inu</mat-card-title>
+                <mat-card-subtitle> {{ 200 | currency: 'INR' }} - Currently Active</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <p>
+                  In next 2 hours and 15 minutes
+                </p>
+              </mat-card-content>
+              <mat-card-actions style="text-align:right">
+                <button mat-raised-button color="warn">CANCEL</button>
+              </mat-card-actions>
+            </mat-card>
+            <br />
+
+          </ng-container>
+          <mat-divider *ngIf="activeTravels?.length > 0 && previousTravels?.length > 0"></mat-divider>
+          <br />
+          <h3 *ngIf="previousTravels?.length > 0">Previous </h3>
+
+          <ng-container *ngFor="let item of previousTravels">
+
+            <mat-card class="previous-travels-card">
+              <mat-card-header>
+                <div mat-card-avatar class="scooter-bg"></div>
+                <mat-card-title>Tom Harry</mat-card-title>
+                <mat-card-subtitle>Closed</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <p>
+                  In next 4 hours and 15 minutes
+                </p>
+              </mat-card-content>
+              <mat-card-actions style="text-align:right">
+                <button mat-raised-button color="warn">CANCEL</button>
+              </mat-card-actions>
+            </mat-card>
+            <br />
+
+          </ng-container>
+
+        </div>
+
+
+
+
+      </mat-tab>
+    </mat-tab-group>
+
+  </layout>
+
+</activity>

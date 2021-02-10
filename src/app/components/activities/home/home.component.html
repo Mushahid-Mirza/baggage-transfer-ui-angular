@@ -1,0 +1,54 @@
+<activity>
+
+  <sidenav-common [title]="title" [searchText]="'Select Destination'" [isSearch]="true" [isBack]="false"
+    (onSearch)="onSearch($event)" [suggestionList]="suggestionList" (onSearchSelected)="onSearchSelected($event)">
+  </sidenav-common>
+
+  <layout class="remove-margin" (onLoadComplete)="initMap()">
+
+    <div id="myMap"></div>
+
+    <div class="search-actions" style='padding:5px 10px; width: calc(100% - 20px)'>
+      <mat-card style="border-radius: 8px;">
+        <h4>Track me for </h4>
+        <mat-grid-list cols="2" rowHeight="50px" [gutterSize]="'10px'">
+          <mat-grid-tile>
+            <mat-form-field appearance="legacy" style="text-align:center">
+              <mat-label>In next</mat-label>
+              <mat-select [(value)]="selectedHour">
+                <mat-option value="-1">None</mat-option>
+                <mat-option value="1">1 Hour</mat-option>
+                <mat-option value="2">2 Hour</mat-option>
+                <mat-option value="3">3 Hour</mat-option>
+                <mat-option value="4">4 Hour</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </mat-grid-tile>
+          <mat-grid-tile>
+            <mat-form-field appearance="legacy" style="text-align:center">
+              <mat-label>and</mat-label>
+              <mat-select [(value)]="selectedMinute">
+                <mat-option value="-1">None</mat-option>
+                <mat-option value="10">10 Minutes</mat-option>
+                <mat-option value="20">20 Minutes</mat-option>
+                <mat-option value="30">30 Minutes</mat-option>
+                <mat-option value="40">40 Minutes</mat-option>
+                <mat-option value="50">50 Minutes</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </mat-grid-tile>
+
+          <mat-grid-tile>
+            <button mat-flat-button color="accent" (click)="findNearbyTravelers()">Need Traveller</button>
+          </mat-grid-tile>
+
+          <mat-grid-tile>
+            <button mat-flat-button color="primary" (click)="findNearbyBaggage()">I'm Travelling</button>
+          </mat-grid-tile>
+        </mat-grid-list>
+      </mat-card>
+    </div>
+  </layout>
+
+
+</activity>

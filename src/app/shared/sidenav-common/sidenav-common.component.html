@@ -1,0 +1,51 @@
+<mat-toolbar [color]="'primary'" *ngIf="!isSearch">
+
+  <ng-container>
+    <button *ngIf="hasNav && !isBack" class="sidenav-toggle-button" type="button" aria-label="Toggle sidenav"
+      mat-icon-button (click)="openDrawer()">
+      <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+    </button>
+
+    <button class="sidenav-toggle-button" type="button" *ngIf="isBack" aria-label="Toggle sidenav" mat-icon-button
+      (click)="navigateBack()">
+      <mat-icon aria-label="Side nav back icon">arrow_back</mat-icon>
+    </button>
+
+    <a class="toolbar-title" routerLink="/">
+      {{ title }}
+    </a>
+
+  </ng-container>
+
+</mat-toolbar>
+
+<ng-container *ngIf="isSearch">
+  <div matRipple [matRippleDisabled]="isSearchOpen" class="search-toolbar mat-card" [class.padding]="!isSearchOpen"
+    (click)="isSearchOpen = true; suggestionOpen = true; searchBox.focus()">
+
+    <button *ngIf="hasNav && !isBack" class="sidenav-toggle-button" type="button" aria-label="Toggle sidenav"
+      mat-icon-button (click)="openDrawer()">
+      <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+    </button>
+
+    <div class="search-text" [class.d-none]="isSearchOpen">{{ searchValue == "" ? searchText : searchValue}}</div>
+    <button class="search-toggle-button" [class.d-none]="isSearchOpen"
+      style="position:absolute; right:0; margin-right:5px; padding-top:5px" type="button" aria-label="Search"
+      mat-icon-button>
+      <mat-icon aria-label="search icon">search</mat-icon>
+    </button>
+
+    <mat-form-field appearance="outline" class="search-box" [class.d-none]="!isSearchOpen">
+      <input #searchBox matInput [placeholder]="searchText" (ngModelChange)="filterSuggestion($event)" [ngModel]="searchValue" autocomplete="off">
+
+      <mat-icon matSuffix (click)="isSearchOpen = false; searchValue = ''; suggestionOpen = false; $event.stopPropagation()">close</mat-icon>
+    </mat-form-field>
+    <div class="suggestions" *ngIf="suggestionOpen == true">
+      <ng-container *ngFor="let _item of suggestionList">
+        <div class="suggestion-item" matRipple (click)="textSelected(_item)">
+           {{ _item.Text }}
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</ng-container>

@@ -1,0 +1,26 @@
+<activity>
+  <sidenav-common [title]="title" [searchText]="'Select Destination'" [isBack]="true">
+  </sidenav-common>
+
+  <layout class="remove-margin" style="padding: 5px;">
+
+
+    <ng-container *ngFor="let item of requests">
+
+      <mat-card class="active-booking-card">
+        <mat-card-header>
+          <div mat-card-avatar class="{{ item.type == 'baggage' ? 'parcel-bg' : 'scooter-bg' }}"></div>
+          <mat-card-title> {{ item.name }} </mat-card-title>
+          <mat-card-subtitle> {{ item.price }} - Currently Active</mat-card-subtitle>
+        </mat-card-header> 
+        <mat-card-actions style="text-align:right">
+          <button mat-raised-button color="accent">ACCEPT</button>
+          <button mat-raised-button color="warn">REJECT</button>
+        </mat-card-actions>
+      </mat-card>
+      <br />
+
+    </ng-container>
+  </layout>
+
+</activity>
