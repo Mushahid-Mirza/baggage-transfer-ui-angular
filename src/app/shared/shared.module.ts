@@ -38,6 +38,7 @@ import { RepeatPasswordEStateMatcher, RepeatPasswordValidator } from './validato
 import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MessageDialogComponent } from './message-dialog/message-dialog.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     LoadSpinnerComponent,
     LoginComponent,
     LogoutComponent,
+    MessageDialogComponent,
+    MessageDialogComponent
   ],
   imports: [
 
@@ -127,10 +130,15 @@ import { MatDialogModule } from '@angular/material/dialog';
     LoadSpinnerComponent,
     SidenavCommonComponent,
 
+    MessageDialogComponent,
+
     FormsModule,
     FormsModule,
     ReactiveFormsModule,
 
-  ]
+  ],
+  entryComponents: [
+    MessageDialogComponent
+  ],
 })
 export class SharedModule { }

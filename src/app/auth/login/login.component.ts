@@ -1,9 +1,8 @@
 import { Component, OnInit, Injector, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from '../_services/authentication.service';
 import { first } from 'rxjs/operators';
-import { Role } from '../_models/role';
 import { BaseComponent } from 'src/app/shared/base.component';
 import { environment } from 'src/environments/environment';
 
@@ -74,14 +73,7 @@ export class LoginComponent extends BaseComponent implements OnInit, OnDestroy {
             .pipe(first())
             .subscribe(
                 data => {
-
-                    //if (data.role == Role.User) {
                     this.router.navigate(["home"]);
-                    //}
-                    // else if (data.role == Role.Supplier) {
-                    //     this.router.navigate(["supplier"]);
-                    // }
-
                     this.loading = false;
                 },
                 error => {

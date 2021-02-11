@@ -1,10 +1,14 @@
-:host { 
-  height:100vh;
+:host {
+  height: 100vh;
   display: flex;
   flex-direction: column;
-} 
+}
 
-load-spinner{
-  margin:auto auto;
-  transform: translateY(-50%); 
+load-spinner {
+  margin: auto auto;
+  transform: translateY(-50%);
+}
+
+.d-none {
+  display: none !important;
 }

@@ -1,4 +1,4 @@
-<activity>
+<activity [isLoading]="loading">
 
   <sidenav-common [title]="title" [searchText]="'Select Destination'" [isSearch]="true" [isBack]="false"
     (onSearch)="onSearch($event)" [suggestionList]="suggestionList" (onSearchSelected)="onSearchSelected($event)">

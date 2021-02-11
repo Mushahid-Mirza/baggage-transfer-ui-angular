@@ -4,7 +4,7 @@ export const environment = {
   app_name: 'Baggage Transfer System',
   minDate: new Date(2020, 2),
   maxDate: new Date(2018, 5),
-  apiUrl: 'http://localhost:58821/api',
+  apiUrl: 'https://localhost:44317/api/',
   appAuthUrl: 'https://localhost:44317/token',
   azureLocationSearchUrl: "https://atlas.microsoft.com/search/address/json?api-version=1.0",
   azureMapAuthOptions: {

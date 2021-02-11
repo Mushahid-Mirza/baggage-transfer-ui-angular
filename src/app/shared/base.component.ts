@@ -1,5 +1,5 @@
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { OnDestroy, OnInit, Injector, Directive, Component } from "@angular/core";
+import { OnDestroy, OnInit, Injector, Directive, Component, inject } from "@angular/core";
 import { ErrorInterceptor } from "../auth/_helpers/error.interceptor";
 import { HttpClient } from "@angular/common/http";
 import { MatSnackBar } from "@angular/material/snack-bar";
@@ -8,6 +8,9 @@ import { map, catchError } from "rxjs/operators";
 import { environment } from "src/environments/environment";
 import { ErrorInterceptorService } from "./services/error-interceptor.service";
 import { Router } from "@angular/router";
+import { AuthenticationService } from '../auth/_services/authentication.service';
+import { MatDialog } from '@angular/material/dialog';
+import { MessageDialogComponent } from './message-dialog/message-dialog.component';
 
 export enum Result {
     ValidationError = 1,
@@ -34,6 +37,8 @@ export class BaseComponent implements OnInit, OnDestroy {
     protected http: HttpClient;
     protected router: Router;
     protected errorIntrcptr: ErrorInterceptorService;
+    protected auth: AuthenticationService;
+    protected dialog: MatDialog;
 
     constructor(protected injector: Injector) {
 
@@ -42,6 +47,8 @@ export class BaseComponent implements OnInit, OnDestroy {
         this.http = injector.get(HttpClient);
         this.router = injector.get(Router);
         this.errorIntrcptr = injector.get(ErrorInterceptorService);
+        this.auth = injector.get(AuthenticationService);
+        this.dialog = injector.get(MatDialog);
     }
 
     protected post<T>(url: string, data: any): Observable<any> {
@@ -132,6 +139,17 @@ export class BaseComponent implements OnInit, OnDestroy {
         this.http = null;
         this.router = null;
         this.errorIntrcptr = null;
+    }
+
+    showMessageBox(title : string, message: string, type: "Ok"|"Cancel"|"Close") : Observable<any>{
+
+        const dialogRef = this.dialog.open(MessageDialogComponent, {
+            restoreFocus: false,
+            width: '250px',
+            data: { title, message, type }
+          });
+      
+        return  dialogRef.afterClosed();
     }
 
 

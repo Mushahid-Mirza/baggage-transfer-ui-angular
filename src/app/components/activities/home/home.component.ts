@@ -1,4 +1,4 @@
-import { Component, Inject, Injector, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, Inject, Injector, OnInit, ViewChild } from '@angular/core';
 import { BaseComponent } from 'src/app/shared/base.component';
 import * as atlas from 'azure-maps-control';
 import { environment } from 'src/environments/environment';
@@ -8,13 +8,16 @@ import * as geoAtlas from 'src/custom-lib/geo-location/src';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+import { ActivitiesService } from 'src/app/services/activities.service';
+import { AuthenticationService } from 'src/app/auth/_services/authentication.service';
+import { ResponseObject } from 'src/app/models/common';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent extends BaseComponent implements OnInit {
 
   mapOptions: any = {
     center: [-122.33, 47.6],
@@ -39,8 +42,11 @@ export class HomeComponent implements OnInit {
 
   map: atlas.Map;
 
-  constructor(private azureService: AzureApiServicesService, public dialog: MatDialog,
-    public snackBar: MatSnackBar) {
+  constructor(public injector: Injector,
+    private azureService: AzureApiServicesService,
+    private activityService: ActivitiesService) {
+    super(injector);
+
   }
 
   ngOnInit(): void {
@@ -57,7 +63,7 @@ export class HomeComponent implements OnInit {
       "subscription-key": environment.azureMapAuthOptions.subscriptionKey
     };
     this.azureService.getAzureData(url, data).subscribe(res => {
-      console.log(JSON.stringify(res));
+      //console.log(JSON.stringify(res));
 
       var res = res.results;
       var suggestions = [];
@@ -71,15 +77,25 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  onSearchSelected(location) {
+  destination: number[];
+  currentLocaition: number[];
 
+  onSearchSelected(locaitonItem) {
+    if (locaitonItem != null && locaitonItem.Value != null && locaitonItem.Value.position != null) {
+
+      let _geo = locaitonItem.Value.position;
+      this.destination = [_geo.lat, _geo.lon];
+    } else {
+      this.destination = null;
+    }
+    //console.log(JSON.stringify(locaitonItem));
   }
 
   initMap() {
 
     setTimeout(() => {
 
-      this.getCurrentLocation(() => {
+      this.getCurrentLocation((geo) => {
 
         this.map = new atlas.Map('myMap', this.mapOptions);
 
@@ -106,13 +122,13 @@ export class HomeComponent implements OnInit {
 
   getElement(userObject: any) {
 
-    var icon = userObject.type == "travel" ? 'directions_bike' : 'card_travel';
+    var icon = userObject.requestType == "travel" ? 'directions_bike' : 'card_travel';
 
     var ele: HTMLElement = document.createElement("div");
     ele.className = "circle";
     ele.innerHTML = '<mat-icon class="mat-icon material-icons">' + icon + '</mat-icon>';
     ele.onclick = () => {
-      this.clicked(userObject.id);
+      this.clicked(userObject.userId);
     }
     return ele;
   }
@@ -122,7 +138,7 @@ export class HomeComponent implements OnInit {
     var marker = new atlas.HtmlMarker({
       color: 'Black',
       htmlContent: this.getElement(userObject),
-      position: userObject.geoCode,
+      position: [userObject.startLat, userObject.startLong],
       popup: new atlas.Popup({
         content: '<div style="padding:10px">Hello World</div>',
         pixelOffset: [0, -30],
@@ -132,30 +148,76 @@ export class HomeComponent implements OnInit {
     return marker;
   }
 
+  getRequest(callback) {
+    var _user = this.auth.currentUserValue;
+    this.getCurrentLocation(() => {
+      var user = {
+        UserId: _user["userName"],
+        StartGeo: this.currentLocaition,
+        EndGeo: this.destination,
+        ActiveTillHours: parseInt(this.selectedHour),
+        ActiveTillMinutes: parseInt(this.selectedMinute),
+      }
+      if (callback) callback(user);
+    });
+
+  }
+
   findNearbyBaggage() {
 
-    this.map.markers.clear();
+    if (this.destination != null && this.selectedHour != "-1" && this.selectedMinute != "-1") {
 
-    if (this.selectedHour != "-1" && this.selectedMinute != "-1") {
+      this.getRequest((request) => {
 
-      var users = [{
-        name: "Harry Peter",
-        geoCode: [74.55531, 13.98524], id: "bkl", type: "baggage",
-        amount: 200,
-        startAddress: "Marthalli", destinatin: "Electronic City"
-      }, {
-        name: "Tom William",
-        geoCode: [74.54431, 13.9553], id: "bkl 2", type: "baggage",
-        amount: 200,
-        startAddress: "Marthalli", destinatin: "Electronic City"
-      }];
-      this.mapOptions.center = users[0].geoCode
+        request.RequestType = "baggage";
 
-      this.addUsersInmarkers(users);
+        this.loading = true;
+
+        this.activityService.addActivity(request).subscribe((res: ResponseObject) => {
+
+          this.loading = false;
+
+          this.showMessageBox("Request Added", res.message, "Ok").subscribe(res => {
+
+            // this.map.markers.clear();
+
+            // var users = [{
+            //   name: "Harry Peter",
+            //   geoCode: [74.55531, 13.98524], id: "bkl",
+            //   amount: 200,
+            //   startAddress: "Marthalli", destinatin: "Electronic City"
+            // }, {
+            //   name: "Tom William",
+            //   geoCode: [74.54431, 13.9553], id: "bkl 2",
+            //   amount: 200,
+            //   startAddress: "Marthalli", destinatin: "Electronic City"
+            // }];
+
+            //this.mapOptions.center = users[0].geoCode
+
+            //this.addUsersInmarkers(users, "baggage");
+            this.findUsers("baggage");
+
+          });
+
+
+        })
+      })
     } else {
 
-      this.snackBar.open("Please select the timings", null, { duration: 2000, verticalPosition: "bottom" });
+      this.snackBar.open("Please select the destination & timings", null, { duration: 2000, verticalPosition: "bottom" });
     }
+  }
+
+  findUsers(type: "travel" | "baggage") {
+    var requestData = {
+      ReqquestType: type, Start: this.currentLocaition,
+      Destination: this.destination, UserId: this.auth.currentUserValue["userName"]
+    };
+    this.activityService.findUsers(requestData).subscribe((res: ResponseObject) => {
+      this.showMessageBox("We've searched for you!", res.message, "Ok");
+      this.addUsersInmarkers(res.data, type);
+    })
   }
 
   findNearbyTravelers() {
@@ -166,30 +228,33 @@ export class HomeComponent implements OnInit {
 
       var users = [{
         name: "John Doe",
-        geoCode: [74.55531, 13.98534], id: "bkl", type: "travel",
+        geoCode: [74.55531, 13.98534], id: "bkl",
         amount: 200,
         startAddress: "Marthalli", destinatin: "Electronic City"
       }, {
         name: "John Locke",
-        geoCode: [74.54431, 13.9843], id: "bkl 2", type: "travel",
+        geoCode: [74.54431, 13.9843], id: "bkl 2",
         amount: 200,
         startAddress: "Marthalli", destinatin: "Electronic City"
       }];
 
 
-      this.addUsersInmarkers(users);
+      this.addUsersInmarkers(users, "travel");
     } else {
       this.snackBar.open("Please select the timings", null, { duration: 2000, verticalPosition: "bottom" })
     }
   }
 
-  addUsersInmarkers(users: any[]) {
+  addUsersInmarkers(users: any[], type: "baggage" | "travel") {
 
     users.forEach(item => {
+      item.type = type;
       this.map.markers.add(this.getMarker(item));
     })
+    var usr = users[users.length - 1];
+    var geoCode = [usr[0].startLat, usr[1].startLong];
     this.map.setCamera({
-      center: users[users.length - 1].geoCode
+      center: geoCode
     })
   }
 
@@ -213,10 +278,11 @@ export class HomeComponent implements OnInit {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(position => {
 
-        this.mapOptions.center[0] = position.coords.longitude;
-        this.mapOptions.center[1] = position.coords.latitude;
+        var lat = position.coords.latitude;
+        var lon = position.coords.longitude;
+        this.currentLocaition = [lat, lon];
 
-        cb();
+        if (cb) cb();
       });
     }
     else {
