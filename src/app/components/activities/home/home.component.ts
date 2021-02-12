@@ -88,7 +88,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
     } else {
       this.destination = null;
     }
-    //console.log(JSON.stringify(locaitonItem));
+    console.log(JSON.stringify(locaitonItem));
   }
 
   initMap() {
