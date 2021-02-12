@@ -39,11 +39,11 @@
           </mat-grid-tile>
 
           <mat-grid-tile>
-            <button mat-flat-button color="accent" (click)="findNearbyTravelers()">Need Traveller</button>
+            <button mat-flat-button color="accent" (click)="addRequest('baggage')">Need Traveller</button>
           </mat-grid-tile>
 
           <mat-grid-tile>
-            <button mat-flat-button color="primary" (click)="findNearbyBaggage()">I'm Travelling</button>
+            <button mat-flat-button color="primary" (click)="addRequest('travel')">I'm Travelling</button>
           </mat-grid-tile>
         </mat-grid-list>
       </mat-card>

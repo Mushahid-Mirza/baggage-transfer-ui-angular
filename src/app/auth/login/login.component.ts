@@ -36,7 +36,7 @@ export class LoginComponent extends BaseComponent implements OnInit, OnDestroy {
 
         this.loginForm = this.fb.group({
             email: ['', [Validators.required, Validators.email]],
-            password: ['', [Validators.required, Validators.pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[#?!@$%^&*-]).{6,}$/)]],
+            password: ['', [Validators.required, Validators.pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/)]],
             rememberMe: [true]
         })
 
@@ -45,11 +45,11 @@ export class LoginComponent extends BaseComponent implements OnInit, OnDestroy {
     }
 
 
-    email() {
+    get email() {
         return this.loginForm.get('email');
     }
 
-    password() {
+    get password() {
         return this.loginForm.get('password');
     }
 
@@ -69,7 +69,7 @@ export class LoginComponent extends BaseComponent implements OnInit, OnDestroy {
         }
 
         this.loading = true;
-        this.authenticationService.login(this.email().value, this.password().value)
+        this.authenticationService.login(this.email.value, this.password.value)
             .pipe(first())
             .subscribe(
                 data => {

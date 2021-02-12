@@ -38,9 +38,9 @@ export class AuthenticationService {
         }));
     }
 
-    signup(username: string, password: string): Observable<any> {
+    signup(username: string, password: string, confirm: string): Observable<any> {
 
-        return this.http.post<any>(`${environment.apiUrl}/auth/register`, { "UserName": username, "Password": password })
+        return this.http.post<any>(`${environment.apiUrl}/auth/register`, { "Email": username, "Password": password, "ConfirmPassword": confirm })
             .pipe(map(user => {
                  localStorage.setItem('currentUser', JSON.stringify(user));
                 this.currentUserSubject.next(user);

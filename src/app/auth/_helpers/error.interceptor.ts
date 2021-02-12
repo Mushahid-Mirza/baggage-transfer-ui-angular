@@ -43,6 +43,8 @@ export class ErrorInterceptor implements HttpInterceptor {
                     && error.error.message.trim() != ""){
                         
                     msg = error.error.message;
+                } else if(error.error.error_description != null){
+                    msg = error.error.error_description;
                 }
                 this.errorIntrcptr.httpErrorOccurred.next(msg);
             }

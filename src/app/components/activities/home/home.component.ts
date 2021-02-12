@@ -4,7 +4,7 @@ import * as atlas from 'azure-maps-control';
 import { environment } from 'src/environments/environment';
 import { AzureApiServicesService } from 'src/app/services/azure-api-services.service';
 
-import * as geoAtlas from 'src/custom-lib/geo-location/src';
+import * as geoAtlas from 'src/custom-lib/geo-location/geo-location-control';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -109,9 +109,11 @@ export class HomeComponent extends BaseComponent implements OnInit {
   onMapReady(e: atlas.MapEvent) {
 
     this.map.events.add('ongeolocationsuccess', this.gc, function (arg) {
+      console.log(JSON.stringify(arg));
     });
 
     this.map.events.add('ongeolocationerror', this.gc, function (arg) {
+      console.log("error - " + JSON.stringify(arg));
     });
 
     this.map.controls.add(this.gc, {
@@ -163,13 +165,13 @@ export class HomeComponent extends BaseComponent implements OnInit {
 
   }
 
-  findNearbyBaggage() {
+  addRequest(type: "travel" | "baggage") {
 
     if (this.destination != null && this.selectedHour != "-1" && this.selectedMinute != "-1") {
 
       this.getRequest((request) => {
 
-        request.RequestType = "baggage";
+        request.RequestType = type;
 
         this.loading = true;
 
@@ -179,28 +181,9 @@ export class HomeComponent extends BaseComponent implements OnInit {
 
           this.showMessageBox("Request Added", res.message, "Ok").subscribe(res => {
 
-            // this.map.markers.clear();
-
-            // var users = [{
-            //   name: "Harry Peter",
-            //   geoCode: [74.55531, 13.98524], id: "bkl",
-            //   amount: 200,
-            //   startAddress: "Marthalli", destinatin: "Electronic City"
-            // }, {
-            //   name: "Tom William",
-            //   geoCode: [74.54431, 13.9553], id: "bkl 2",
-            //   amount: 200,
-            //   startAddress: "Marthalli", destinatin: "Electronic City"
-            // }];
-
-            //this.mapOptions.center = users[0].geoCode
-
-            //this.addUsersInmarkers(users, "baggage");
-            this.findUsers("baggage");
+            this.findUsers(type);
 
           });
-
-
         })
       })
     } else {
@@ -220,42 +203,19 @@ export class HomeComponent extends BaseComponent implements OnInit {
     })
   }
 
-  findNearbyTravelers() {
-
-    this.map.markers.clear();
-
-    if (this.selectedHour != "-1" && this.selectedMinute != "-1") {
-
-      var users = [{
-        name: "John Doe",
-        geoCode: [74.55531, 13.98534], id: "bkl",
-        amount: 200,
-        startAddress: "Marthalli", destinatin: "Electronic City"
-      }, {
-        name: "John Locke",
-        geoCode: [74.54431, 13.9843], id: "bkl 2",
-        amount: 200,
-        startAddress: "Marthalli", destinatin: "Electronic City"
-      }];
-
-
-      this.addUsersInmarkers(users, "travel");
-    } else {
-      this.snackBar.open("Please select the timings", null, { duration: 2000, verticalPosition: "bottom" })
-    }
-  }
-
   addUsersInmarkers(users: any[], type: "baggage" | "travel") {
 
-    users.forEach(item => {
-      item.type = type;
-      this.map.markers.add(this.getMarker(item));
-    })
-    var usr = users[users.length - 1];
-    var geoCode = [usr[0].startLat, usr[1].startLong];
-    this.map.setCamera({
-      center: geoCode
-    })
+    if (users != null && users.length > 0) {
+      users.forEach(item => {
+        item.type = type;
+        this.map.markers.add(this.getMarker(item));
+      })
+      var usr = users[0];
+      var geoCode = [usr.startLat, usr.startLong];
+      this.map.setCamera({
+        center: geoCode
+      })
+    }
   }
 
   clicked(userObj) {

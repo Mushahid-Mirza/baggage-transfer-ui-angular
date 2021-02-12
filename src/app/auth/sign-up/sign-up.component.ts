@@ -35,9 +35,9 @@ export class SignUpComponent extends BaseComponent implements OnInit, OnDestroy 
         super.ngOnInit();
 
         this.signupForm = this.fb.group({
-            email: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
-            password: ['', [Validators.required, Validators.pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[#?!@$%^&*-]).{6,}$/)]],
-            Confirm: ['', [Validators.required, Validators.pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[#?!@$%^&*-]).{6,}$/)]],
+            email: ['', [Validators.required, Validators.email]],
+            password: ['', [Validators.required, Validators.pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/)]],
+            confirm: ['', [Validators.required, Validators.pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/)]],
             rememberMe: [true]
         })
 
@@ -49,12 +49,15 @@ export class SignUpComponent extends BaseComponent implements OnInit, OnDestroy 
         this.router.navigate(["login"])
     }
 
-    email() {
+    get email() {
         return this.signupForm.get('email');
     }
 
-    password() {
+    get password() {
         return this.signupForm.get('password');
+    }
+    get confirm() {
+        return this.signupForm.get('confirm');
     }
 
     signUp() {
@@ -73,25 +76,32 @@ export class SignUpComponent extends BaseComponent implements OnInit, OnDestroy 
         }
 
         this.loading = true;
-        this.authenticationService.signup(this.email().value, this.password().value)
+        this.authenticationService.signup(this.email.value, this.password.value, this.confirm.value)
             .pipe(first())
-            .subscribe(
-                data => {
+            .subscribe(() => {
 
-                    if (data.role == Role.User) {
-                        this.router.navigate(["home"]);
-                    }
-                    // else if (data.role == Role.Supplier) {
-                    //     this.router.navigate(["supplier"]);
-                    // }
+                setTimeout(() => {
+                    this.authenticationService.login(this.email.value, this.password.value)
+                        .pipe(first())
+                        .subscribe(data => {
 
-                    this.loading = false;
-                },
-                error => {
-                    setTimeout(() => {
-                        this.loading = false;
-                    }, 500);
-                    this.error = error;
+                            this.router.navigate(["home"]);
+                            this.loading = false;
+
+                        }, error => {
+                            
+                            setTimeout(() => {
+                                this.loading = false;
+                            }, 500);
+                            this.error = error;
+                        });
                 });
+
+            }, error => {
+                setTimeout(() => {
+                    this.loading = false;
+                }, 500);
+                this.error = error;
+            });
     }
 }
