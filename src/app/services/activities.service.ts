@@ -12,7 +12,7 @@ export class ActivitiesService {
 
   private activities_add_url = environment.apiUrl + "activities/add-enquiry"; 
   private activities_find_user_url = environment.apiUrl + "activities/find-users"; 
-  private auth_get_user_url = environment.apiUrl + "api/auto/get-user"; 
+  private activities_get_bookings_url = environment.apiUrl + "activities/get-bookings"; 
 
   constructor(protected apiService: ApiRequestService) {  
   }
@@ -25,11 +25,7 @@ export class ActivitiesService {
     return this.apiService.post(this.activities_find_user_url, requestData)
   } 
 
-  public getBookings(requestData): Observable<any>{
-    return this.apiService.get(this.auth_get_user_url, requestData);
-  }
-
-  public getUserInfo(requestData): Observable<any>{
-    return this.apiService.get(this.auth_get_user_url, requestData);
+  public getBookings(): Observable<any>{
+    return this.apiService.get(this.activities_get_bookings_url);
   }
 }

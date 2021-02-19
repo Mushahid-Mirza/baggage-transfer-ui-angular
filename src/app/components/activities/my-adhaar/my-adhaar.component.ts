@@ -28,9 +28,11 @@ export class MyAdhaarComponent extends BaseComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading = true;
-    this.userService.getCurrentUserDetails().subscribe((res: ResponseObject) => {
+    this.userService.getCurrentUserDetails(true).subscribe((res) => {
       this.loading = false;
-      this.aadharInfo.url = res.data.aadharUrl;
+      this.aadharInfo.url = environment.baseUrl + res.aadharUrl;
+    }, error => {
+      this.loading = false;
     })
     //this.aadharInfo.url = environment.baseUrl +  "Storage/Uploads/Images/78a8a349d3534474b82d1c0158ca1f3a.PNG"
   }

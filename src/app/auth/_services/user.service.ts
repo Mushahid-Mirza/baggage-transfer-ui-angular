@@ -15,11 +15,11 @@ export class UserService {
 
     constructor(protected apiService: ApiRequestService) { }
 
-    getCurrentUserDetails(): Observable<any> {
+    getCurrentUserDetails(forceLoad?: boolean): Observable<any> {
 
-        if (JSON.parse(localStorage.getItem("userDetails")) == null) {
+        if (forceLoad || JSON.parse(localStorage.getItem("userDetails")) == null) {
 
-            return this.apiService.get(`${environment.apiUrl}/activities/get-user-details`)
+            return this.apiService.get(`${environment.apiUrl}activities/get-user-details`)
                 .pipe(map((res: ResponseObject) => {
                     localStorage.setItem("userDetails", JSON.stringify(res.data));
                     return res.data;
@@ -28,5 +28,9 @@ export class UserService {
         else {
             return of(JSON.parse(localStorage.getItem("userDetails")));
         }
+    }
+
+    saveUserDetails(data): Observable<any>{
+        return this.apiService.post(`${environment.apiUrl}activities/save-user-details`, data);
     }
 }

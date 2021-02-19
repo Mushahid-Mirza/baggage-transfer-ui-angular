@@ -5,7 +5,7 @@ import { environment } from 'src/environments/environment';
 import { AzureApiServicesService } from 'src/app/services/azure-api-services.service';
 
 import * as geoAtlas from 'src/custom-lib/geo-location/geo-location-control';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { ActivitiesService } from 'src/app/services/activities.service';
@@ -140,7 +140,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
     var marker = new atlas.HtmlMarker({
       color: 'Black',
       htmlContent: this.getElement(userObject),
-      position: [userObject.startLat, userObject.startLong],
+      position: [userObject.startLong, userObject.startLat],
       popup: new atlas.Popup({
         content: '<div style="padding:10px">Hello World</div>',
         pixelOffset: [0, -30],
@@ -211,7 +211,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
         this.map.markers.add(this.getMarker(item));
       })
       var usr = users[0];
-      var geoCode = [usr.startLat, usr.startLong];
+      var geoCode = [usr.startLong, usr.startLat];
       this.map.setCamera({
         center: geoCode
       })
@@ -258,5 +258,13 @@ export class HomeComponent extends BaseComponent implements OnInit {
   templateUrl: 'user-location-details.html',
 })
 export class UserLocationDetailsPopup {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: { name: string, amount: number, startLocation: string, destination: string, type: string }) { }
+  constructor(private dialogRef: MatDialogRef<UserLocationDetailsPopup>,
+    private service: ActivitiesService,
+    @Inject(MAT_DIALOG_DATA) public data: { name: string, amount: number, startLocation: string, destination: string, type: string }) { 
+
+  }
+ 
+  close(){
+    this.dialogRef.close();
+  }
 }

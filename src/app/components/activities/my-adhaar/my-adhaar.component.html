@@ -2,10 +2,10 @@
   <sidenav-common [title]="title" [searchText]="'Select Destination'" [isBack]="true">
   </sidenav-common>
 
-  <layout>
+  <layout [isLoading]="loading">
 
 
-    <ng-container *ngIf="aadharInfo?.url != defaultUrl">
+    <ng-container *ngIf="aadharInfo?.url != defaultUrl && aadharInfo?.url != null">
 
       <br />
       <h2 style="text-align: center">Aadhar{{ isUploading ? " Preview" : "" }}</h2>
@@ -23,7 +23,7 @@
     
     </ng-container>
 
-    <ng-container *ngIf="aadharInfo?.url == defaultUrl">
+    <ng-container *ngIf="aadharInfo?.url == defaultUrl || aadharInfo?.url == null">
         <br/><br/>
     </ng-container>
 
@@ -31,7 +31,7 @@
         <input #fileUpload type="file" (click)="fileUpload.value = null" (change)="importFile($event)" style="display:none"
             accept="image/*">
         <button type="button" (click)="fileUpload.click()" mat-flat-button class="mat-flat-button" color="accent">
-          {{ aadharInfo?.url == defaultUrl ?  "Upload Aadhar"  : "Re Upload" }}</button>
+          {{ aadharInfo?.url == defaultUrl || aadharInfo?.url == null ?  "Upload Aadhar"  : "Re Upload" }}</button>
       </div>
 
 

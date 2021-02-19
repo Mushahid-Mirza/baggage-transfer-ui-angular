@@ -1,15 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
+import { ResponseObject } from 'src/app/models/common';
+import { ActivitiesService } from 'src/app/services/activities.service';
+import { BaseComponent } from 'src/app/shared/base.component';
 
 @Component({
   selector: 'app-bookings',
   templateUrl: './bookings.component.html',
   styleUrls: ['./bookings.component.scss']
 })
-export class BookingsComponent implements OnInit {
+export class BookingsComponent extends BaseComponent implements OnInit {
 
   title: string = "My Bookings";
 
-  constructor() { }
+  constructor(protected injector: Injector, 
+    private activityService: ActivitiesService) { 
+    super(injector);
+  }
 
   requests: any[] = [{
     name: "Mr ABC",
@@ -34,6 +40,10 @@ export class BookingsComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.activityService.getBookings().subscribe((res: ResponseObject) => {
+      
+      console.log(JSON.stringify(res));
+    });
   }
 
 }

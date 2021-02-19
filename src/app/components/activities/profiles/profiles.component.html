@@ -2,7 +2,7 @@
 
   <sidenav-common [title]="title" [isBack]="true"></sidenav-common>
 
-  <layout style="padding-top:0px">
+  <layout style="padding-top:0px" [isLoading]="loading">
 
     <div class="profile-banner">
 
@@ -19,33 +19,84 @@
 
       <mat-card class="profile-card">
         <mat-card-header>
-          <mat-card-title>Mushahid Beg</mat-card-title>
+          <mat-card-title>{{ userInfo?.fullName }}</mat-card-title>
         </mat-card-header>
-        <mat-divider></mat-divider>
-        <mat-card-content>
-          <div style="padding:10px;">
+        <mat-divider *ngIf="!isEditMode"></mat-divider>
+        <mat-card-content *ngIf="!isEditMode">
+          <div style="padding:10px; min-height: 200px;">
             <dl>
               <dt>Phone Number</dt>
-              <dd>9675134809</dd>
-              <br />
-
-              <dt>Country</dt>
-              <dd>India</dd>
-
+              <dd>{{ userInfo?.phoneNumber }}</dd>
               <br />
 
               <dt>Address</dt>
-              <dd>Some Address</dd>
+              <dd>{{ userInfo?.address }}</dd>
               <br />
 
 
               <dt>Date Of Birth</dt>
-              <dd>Feb 1995</dd>
+              <dd>{{ userInfo?.dateOfBirth | date: 'dd-MMM-yyyy' }}</dd>
 
             </dl>
           </div>
+          <div class="text-center">
+            <button mat-flat-button color="accent" (click)="editMode()">Edit</button>
+          </div>
         </mat-card-content>
 
+        <mat-card-content *ngIf="isEditMode && saveForm != null" class="text-center">
+          <br/>
+          <form [formGroup]="saveForm" (ngSubmit)="submitted= true; save()">
+            <div style='min-height: 200px;'>
+              <mat-form-field class="login-width" color="accent">
+                <input formControlName="fullName" autocomplete="off"
+                  [class.d-invalid]="submitted && fullName.invalid" 
+                  matInput placeholder="Full Name">
+                <mat-error *ngIf="submitted && fullName.invalid"
+                  [class.text-danger]="true">
+                  Please enter full name
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="login-width" color="accent">
+                <input formControlName="phoneNumber" autocomplete="off"
+                  [class.d-invalid]="submitted && phoneNumber?.invalid" 
+                  matInput placeholder="Phone Number">
+                <mat-error *ngIf="submitted && phoneNumber.invalid"
+                  [class.text-danger]="true">
+                  Please enter valid phone number
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="login-width" color="accent">
+                <input formControlName="dateOfBirth" autocomplete="off" type="date"
+                  [class.d-invalid]="submitted && dateOfBirth.invalid" 
+                  matInput placeholder="Date Of Birth">
+                <mat-error *ngIf="submitted && dateOfBirth.invalid"
+                  [class.text-danger]="true">
+                  Please enter date of birth
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field color="accent">
+                <input formControlName="address" autocomplete="off"
+                  [class.d-invalid]="submitted && address.invalid" 
+                  matInput placeholder="Adress">
+                <mat-error *ngIf="submitted && address.invalid"
+                  [class.text-danger]="true">
+                  Please enter address
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="text-center">
+              <br/>
+              <button mat-flat-button color="warn" (click)="cancelEdit()">Cancel</button>
+              &nbsp; &nbsp;
+              <button mat-flat-button color="accent" type="submit">Save</button>
+            </div>
+          </form>
+
+        </mat-card-content>
 
       </mat-card>
 
