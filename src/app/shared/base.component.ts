@@ -1,7 +1,7 @@
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { OnDestroy, OnInit, Injector, Directive, Component, inject } from "@angular/core";
 import { ErrorInterceptor } from "../auth/_helpers/error.interceptor";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Observable, of, Subscription } from "rxjs";
 import { map, catchError } from "rxjs/operators";
@@ -51,11 +51,11 @@ export class BaseComponent implements OnInit, OnDestroy {
         this.dialog = injector.get(MatDialog);
     }
 
-    protected post<T>(url: string, data: any): Observable<any> {
+    protected post<T>(url: string, data: any, _headers? : HttpHeaders): Observable<any> {
 
         this.loading = true;
-
-        return this.http.post<T>(url, data).pipe(map(res => {
+        _headers = _headers != null ? _headers : new HttpHeaders();
+        return this.http.post<T>(url, data, { headers: _headers }).pipe(map(res => {
             this.loading = false;
             this.showMessage(res);
             return res;

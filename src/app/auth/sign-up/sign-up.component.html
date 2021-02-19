@@ -3,13 +3,37 @@
   <sidenav-common [hasNav]='false' [title]="app_name"></sidenav-common>
 
   <layout [isLoading]="loading">
-    <div style="padding:50px 20px">
+    <div style="padding:50px 20px; padding-bottom: 10px;">
       <br />
       <h3 class="heading">Sign Up</h3>
       <br />
-      <br />
       <form [formGroup]="signupForm" class="signup-form text-center" (ngSubmit)="SignUp()" autocomplete="off">
 
+        <mat-form-field class="signup-width" color="accent">
+          <span matPrefix>
+            <mat-icon [inline]="true">person</mat-icon>
+            &nbsp;
+          </span>
+          <input formControlName="fullName" autocomplete="off"
+            [class.d-invalid]="submitted && fullName.invalid && fullName.touched && fullName.value.length > 0"
+            matInput placeholder="Full Name">
+          <mat-error *ngIf="submitted && fullName.invalid && fullName.touched"
+            [class.text-danger]="true">
+            Please enter your Full Name
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="signup-width" color="accent">
+          <span matPrefix>
+            <small>+91-</small>
+          </span>
+          <input formControlName="phoneNumber" autocomplete="off"
+            [class.d-invalid]="submitted && phoneNumber.invalid && phoneNumber.touched && phoneNumber.value.length > 0"
+            matInput placeholder="Phone Number">
+          <mat-error *ngIf="submitted && phoneNumber.invalid && phoneNumber.touched"
+            [class.text-danger]="true">
+            Please enter your Phone Number
+          </mat-error>
+        </mat-form-field>
         <mat-form-field class="signup-width" color="accent">
           <span matPrefix>
             <mat-icon [inline]="true">person</mat-icon>
@@ -23,7 +47,6 @@
             Please enter valid email
           </mat-error>
         </mat-form-field>
-        <br /> <br />
         <mat-form-field class="signup-width" color="accent">
           <span matPrefix>
             <mat-icon [inline]="true">lock</mat-icon>
@@ -36,8 +59,6 @@
             Please enter the valid Password
           </mat-error>
         </mat-form-field>
-        <br />
-        <br />
         <mat-form-field class="signup-width" color="accent">
           <span matPrefix>
             <mat-icon [inline]="true">lock</mat-icon>
@@ -58,16 +79,16 @@
           <small> Please enter valid credentials</small>
         </div>
 
-        <mat-grid-list cols="4" rowHeight="100px" [gutterSize]="'9px'">
+        <mat-grid-list cols="4" rowHeight="100px" [gutterSize]="'5px'">
           <mat-grid-tile></mat-grid-tile>
           <mat-grid-tile>
             <button type="button" mat-flat-button class="full-width mat-flat-button" (click)="LogIn()"
-              color="primary">Login</button>
+              color="primary"><small>Login</small></button>
           </mat-grid-tile>
           <mat-grid-tile>
             <!--<input type="submit" style="opacity:0; height:1px; width:1px;display:inline-block"/>-->
             <button type="button" mat-flat-button class="full-width mat-flat-button" (click)="SignUp()"
-              color="accent">Sign Up</button>
+              color="accent"><small>Sign Up</small></button>
           </mat-grid-tile>
           <mat-grid-tile></mat-grid-tile>
         </mat-grid-list>

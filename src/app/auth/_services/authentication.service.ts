@@ -8,15 +8,15 @@ import { User } from '../_models/user';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
-    private currentUserSubject: BehaviorSubject<User>;
-    public currentUser: Observable<User>;
+    private currentUserSubject: BehaviorSubject<any>;
+    public currentUser: Observable<any>;
 
     constructor(private http: HttpClient) {
-        this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
+        this.currentUserSubject = new BehaviorSubject<any>(JSON.parse(localStorage.getItem('currentUser')));
         this.currentUser = this.currentUserSubject.asObservable();
     }
 
-    public get currentUserValue(): User {
+    public get currentUserValue(): any {
         return this.currentUserSubject.value;
     }
 
@@ -38,11 +38,15 @@ export class AuthenticationService {
         }));
     }
 
-    signup(username: string, password: string, confirm: string): Observable<any> {
+    signup(fullName: string, phoneNumber: string, username: string, password: string, confirm: string): Observable<any> {
 
-        return this.http.post<any>(`${environment.apiUrl}/auth/register`, { "Email": username, "Password": password, "ConfirmPassword": confirm })
+        return this.http.post<any>(`${environment.apiUrl}auth/register`, { 
+            "Aadhar" : "", "Address" : "",
+            "FullName": fullName, "PhoneNumber" : phoneNumber, 
+            "Email": username, "Password": password, "ConfirmPassword": confirm })
             .pipe(map(user => {
                  localStorage.setItem('currentUser', JSON.stringify(user));
+                
                 this.currentUserSubject.next(user);
                 return user;
             }));

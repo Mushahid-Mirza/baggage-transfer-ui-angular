@@ -5,27 +5,35 @@
   <layout>
 
 
-    <ng-container *ngIf="aadharInfo != null">
-
-      <br /><br />
-      <h2 style="text-align: center">Aadhar</h2>
+    <ng-container *ngIf="aadharInfo?.url != defaultUrl">
 
       <br />
+      <h2 style="text-align: center">Aadhar{{ isUploading ? " Preview" : "" }}</h2>
 
-      <div style="width: calc(100% - 20px); margin-top: 20px; height:auto; padding : 10px;">
+      <div style="width: calc(100% - 20px); margin-top: 20px; height:auto; padding : 10px; text-align: center;">
         <img style="width: 100%"
-          [attr.src]="'https://upload.wikimedia.org/wikipedia/commons/3/3f/A_sample_of_Aadhaar_card.jpg'" />
+          attr.src= "{{ aadharInfo?.url }}" />
+          <br/>
+          <br/>
+          <br/>
+          <button mat-flat-button *ngIf="isUploading" (click)="uploadAadhar()" color="accent">
+            Upload this Image
+          </button>
       </div>
+    
     </ng-container>
 
-    <ng-container *ngIf="aadharInfo == null">
+    <ng-container *ngIf="aadharInfo?.url == defaultUrl">
+        <br/><br/>
+    </ng-container>
 
-      <div style="text-align:center; margin-top: 150px;">
-        <button type="button" mat-flat-button class="mat-flat-button" (click)="uploadAadhar()" color="accent">Upload
-          Aadhar</button>
+      <div style="text-align:center;" *ngIf="isUploading == false">
+        <input #fileUpload type="file" (click)="fileUpload.value = null" (change)="importFile($event)" style="display:none"
+            accept="image/*">
+        <button type="button" (click)="fileUpload.click()" mat-flat-button class="mat-flat-button" color="accent">
+          {{ aadharInfo?.url == defaultUrl ?  "Upload Aadhar"  : "Re Upload" }}</button>
       </div>
 
-    </ng-container>
 
   </layout>
 </activity>

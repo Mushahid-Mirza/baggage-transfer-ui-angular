@@ -32,9 +32,9 @@ export class AppComponent {
 
         console.log(val.url);
 
-        console.log(this.hideNavigationUrls.findIndex(v => v === val.url));
+        console.log(this.hideNavigationUrls.findIndex(v => val.url.indexOf(v) > -1));
 
-        this.showBottomNav = this.hideNavigationUrls.findIndex(v => v === val.url) < 0;
+        this.showBottomNav = this.hideNavigationUrls.findIndex(v => val.url.indexOf(v) > -1) < 0;
 
         console.log(this.showBottomNav);
       }

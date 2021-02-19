@@ -35,6 +35,8 @@ export class SignUpComponent extends BaseComponent implements OnInit, OnDestroy 
         super.ngOnInit();
 
         this.signupForm = this.fb.group({
+            fullName: ['', Validators.required, Validators.minLength(3)],
+            phoneNumber: ['', Validators.required, Validators.minLength(10)],
             email: ['', [Validators.required, Validators.email]],
             password: ['', [Validators.required, Validators.pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/)]],
             confirm: ['', [Validators.required, Validators.pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/)]],
@@ -47,6 +49,14 @@ export class SignUpComponent extends BaseComponent implements OnInit, OnDestroy 
 
     LogIn() {
         this.router.navigate(["login"])
+    }
+
+    get phoneNumber() {
+        return this.signupForm.get('phoneNumber');
+    }
+
+    get fullName() {
+        return this.signupForm.get('fullName');
     }
 
     get email() {
@@ -76,7 +86,8 @@ export class SignUpComponent extends BaseComponent implements OnInit, OnDestroy 
         }
 
         this.loading = true;
-        this.authenticationService.signup(this.email.value, this.password.value, this.confirm.value)
+        this.authenticationService.signup(
+            this.fullName.value, this.phoneNumber.value, this.email.value, this.password.value, this.confirm.value)
             .pipe(first())
             .subscribe(() => {
 
@@ -89,7 +100,7 @@ export class SignUpComponent extends BaseComponent implements OnInit, OnDestroy 
                             this.loading = false;
 
                         }, error => {
-                            
+
                             setTimeout(() => {
                                 this.loading = false;
                             }, 500);
