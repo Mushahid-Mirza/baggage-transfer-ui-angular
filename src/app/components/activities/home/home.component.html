@@ -9,7 +9,7 @@
     <div id="myMap"></div>
 
     <div class="search-actions" style='padding:5px 10px; width: calc(100% - 20px)'>
-      <mat-card style="border-radius: 8px;">
+      <mat-card style="border-radius: 8px;" *ngIf="activeEnquiry == null">
         <h4>Track me for </h4>
         <mat-grid-list cols="2" rowHeight="50px" [gutterSize]="'10px'">
           <mat-grid-tile>
@@ -46,6 +46,12 @@
             <button mat-flat-button color="primary" (click)="addRequest('travel')">I'm Travelling</button>
           </mat-grid-tile>
         </mat-grid-list>
+      </mat-card>
+
+      <mat-card style="border-radius: 8px" *ngIf="activeEnquiry != null">
+        You have an active enquiry for {{ activeEnquiry.type == 1 ? " travelling" : " baggage"}} <br/> you'll be notified once someone request you
+        <br/>
+        <div class="text-center"><button mat-flat-button color="warn" (click)="cancelCurrentEnquiry()">Cancel</button></div>
       </mat-card>
     </div>
   </layout>

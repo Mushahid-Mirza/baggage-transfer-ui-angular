@@ -31,6 +31,8 @@ export class HomeComponent extends BaseComponent implements OnInit {
   }
 
   suggestionList: any[] = [];
+  createdEnquiries: any[] = [];
+  activeEnquiry: any = null;
 
   gc = new geoAtlas.control["GeolocationControl"]({
     style: 'auto'
@@ -50,7 +52,20 @@ export class HomeComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.createdEnquiries = [];
+    this.activeEnquiry = null;
+    this.activityService.getEnquiries().subscribe((res: ResponseObject) => {
+      this.createdEnquiries = res.data;
+      if (this.createdEnquiries.length > 0) {
 
+        this.getCurrentLocation(() => {
+          this.activeEnquiry = this.createdEnquiries[0];
+          this.destination = [this.activeEnquiry.endLat, this.activeEnquiry.endLat];
+          this.findUsers(this.activeEnquiry.type == 1 ? 'travel' : 'baggage')
+        });
+      }
+      console.log(JSON.stringify(res.data));
+    })
   }
 
   selectedHour: string = "-1";
@@ -124,13 +139,13 @@ export class HomeComponent extends BaseComponent implements OnInit {
 
   getElement(userObject: any) {
 
-    var icon = userObject.requestType == "travel" ? 'directions_bike' : 'card_travel';
+    var icon = userObject.requestType == 1 ? 'directions_bike' : 'card_travel';
 
     var ele: HTMLElement = document.createElement("div");
     ele.className = "circle";
     ele.innerHTML = '<mat-icon class="mat-icon material-icons">' + icon + '</mat-icon>';
     ele.onclick = () => {
-      this.clicked(userObject.userId);
+      this.clicked(userObject);
     }
     return ele;
   }
@@ -148,6 +163,17 @@ export class HomeComponent extends BaseComponent implements OnInit {
     });
 
     return marker;
+  }
+
+  cancelCurrentEnquiry() {
+    this.loading = true;
+    this.activityService.deleteCurrentEnquiry().subscribe((res: ResponseObject) => {
+      this.loading = false;
+      this.createdEnquiries = [];
+      this.activeEnquiry = null;
+      this.destination = [];
+      this.ngOnInit();
+    })
   }
 
   getRequest(callback) {
@@ -220,10 +246,12 @@ export class HomeComponent extends BaseComponent implements OnInit {
 
   clicked(userObj) {
 
+    console.log(JSON.stringify(userObj));
+
     const dialogRef = this.dialog.open(UserLocationDetailsPopup, {
       restoreFocus: false,
       width: '250px',
-      data: { name: userObj.name, amount: userObj.amount, startLocation: userObj.startAddress, destination: userObj.destination, type: userObj.type }
+      data: { name: userObj.name, amount: userObj.amount, enquiryId: userObj.id, type: userObj.type }
     });
 
     // Manually restore focus to the menu trigger since the element that
@@ -258,13 +286,23 @@ export class HomeComponent extends BaseComponent implements OnInit {
   templateUrl: 'user-location-details.html',
 })
 export class UserLocationDetailsPopup {
+
+  amount: number = 0;
+
   constructor(private dialogRef: MatDialogRef<UserLocationDetailsPopup>,
     private service: ActivitiesService,
-    @Inject(MAT_DIALOG_DATA) public data: { name: string, amount: number, startLocation: string, destination: string, type: string }) { 
+    @Inject(MAT_DIALOG_DATA) public data: { name: string, amount: number, enquiryId: number, type: string }) {
 
   }
- 
-  close(){
+
+  sendRequest() {
+    this.data.amount = this.amount;
+    this.service.sendRequest(this.data).subscribe((res: ResponseObject) => {
+      this.dialogRef.close()
+    })
+  }
+
+  close() {
     this.dialogRef.close();
   }
 }
